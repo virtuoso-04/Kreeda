@@ -1,0 +1,446 @@
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
+import {RootStackParamList} from '../../App';
+import {db, TestRecord} from '../services/db';
+import uploadService, {UploadProgressCallback} from '../services/upload';
+import SimpleHeader from '../components/SimpleHeader';
+
+type RecordScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Record'
+>;
+
+type RecordScreenRouteProp = RouteProp<RootStackParamList, 'Record'>;
+
+interface Props {
+  navigation: RecordScreenNavigationProp;
+  route: RecordScreenRouteProp;
+}
+
+const RecordScreen: React.FC<Props> = ({navigation, route}) => {
+  const {athleteName, testType} = route.params;
+  const [isRecording, setIsRecording] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [recordedVideoPath, setRecordedVideoPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        ]);
+
+        const allGranted = Object.values(granted).every(
+          status => status === PermissionsAndroid.RESULTS.GRANTED,
+        );
+
+        if (!allGranted) {
+          Alert.alert(
+            'Permissions Required',
+            'Camera and storage permissions are required to record videos.',
+          );
+        }
+      } catch (err) {
+        console.warn('Permission request error:', err);
+      }
+    }
+  };
+
+  // Note: In a production app, this would integrate with react-native-camera
+  // or similar library. For this prototype, we'll use file picker as fallback.
+  const handleRecord = async () => {
+    Alert.alert(
+      'Recording Option',
+      'In production, this would open the camera for recording. For this demo, you can select a pre-recorded video file.',
+      [
+        {
+          text: 'Pick Video File',
+          onPress: pickVideoFile,
+        },
+        {
+          text: 'Generate Test Video',
+          onPress: generateTestVideo,
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+    );
+  };
+
+  const pickVideoFile = async () => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.video],
+        copyTo: 'cachesDirectory',
+      });
+
+      if (result.fileCopyUri) {
+        setRecordedVideoPath(result.fileCopyUri);
+        
+        // Save record to local storage
+        const record: TestRecord = {
+          id: `record_${Date.now()}`,
+          testType,
+          athleteName,
+          filepath: result.fileCopyUri,
+          timestamp: Date.now(),
+          synced: false,
+        };
+
+        await db.saveRecord(record);
+        
+        Alert.alert(
+          'Video Selected',
+          'Video has been saved locally. Do you want to upload and analyze now?',
+          [
+            {text: 'Upload Now', onPress: () => uploadVideo(record)},
+            {text: 'Upload Later', onPress: () => {}},
+          ],
+        );
+      }
+    } catch (error) {
+      if (!DocumentPicker.isCancel(error)) {
+        Alert.alert('Error', 'Failed to pick video file');
+        console.error('Video picker error:', error);
+      }
+    }
+  };
+
+  const generateTestVideo = async () => {
+    Alert.alert(
+      'Generate Test Video',
+      'This would create a synthetic test video using the test video generator from the overlay module. ' +
+        'In the actual implementation, this would call the Python script to generate a test video.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Simulate test video generation
+            const testVideoPath = `${RNFS.CachesDirectoryPath}/test_${testType}_${Date.now()}.mp4`;
+            setRecordedVideoPath(testVideoPath);
+            
+            // Create a placeholder record
+            const record: TestRecord = {
+              id: `test_record_${Date.now()}`,
+              testType,
+              athleteName,
+              filepath: testVideoPath,
+              timestamp: Date.now(),
+              synced: false,
+            };
+            
+            db.saveRecord(record);
+            
+            Alert.alert(
+              'Test Video Generated',
+              'A synthetic test video has been created. This would normally be generated by running the Python script.',
+            );
+          },
+        },
+      ],
+    );
+  };
+
+  const uploadVideo = async (record: TestRecord) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    const progressCallback: UploadProgressCallback = (progress) => {
+      setUploadProgress(progress);
+    };
+
+    try {
+      const result = await uploadService.uploadVideo(
+        record.filepath,
+        {name: athleteName},
+        testType,
+        progressCallback,
+      );
+
+      if (result.success) {
+        // Update record with sync status
+        await db.updateRecord(record.id, {
+          synced: true,
+          jobId: result.jobId,
+          result: result.result,
+        });
+
+        Alert.alert(
+          'Upload Successful!',
+          'Your video has been analyzed. View results?',
+          [
+            {
+              text: 'View Results',
+              onPress: () =>
+                navigation.navigate('Results', {
+                  jobId: result.jobId,
+                  result: result.result,
+                }),
+            },
+            {text: 'Later', style: 'cancel'},
+          ],
+        );
+      } else {
+        Alert.alert('Upload Failed', result.error || 'Unknown error occurred');
+      }
+    } catch (error) {
+      Alert.alert('Upload Error', 'Failed to upload video. Please try again.');
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const syncPendingUploads = async () => {
+    try {
+      const stats = await db.getStats();
+      
+      if (stats.unsyncedRecords === 0) {
+        Alert.alert('No Pending Uploads', 'All videos are already synced.');
+        return;
+      }
+
+      Alert.alert(
+        'Sync Pending Uploads',
+        `You have ${stats.unsyncedRecords} unsynced videos. Upload them now?`,
+        [
+          {
+            text: 'Sync Now',
+            onPress: async () => {
+              setIsUploading(true);
+              const result = await uploadService.syncPendingUploads();
+              setIsUploading(false);
+              
+              Alert.alert(
+                'Sync Complete',
+                `Successfully uploaded: ${result.successful}\nFailed: ${result.failed}`,
+              );
+            },
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+    } catch (error) {
+      Alert.alert('Error', 'Failed to sync uploads');
+      console.error('Sync error:', error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <SimpleHeader
+        title={`Record ${testType === 'pushup' ? 'Push-ups' : 'Sit-ups'}`}
+        subtitle={`Athlete: ${athleteName}`}
+      />
+
+      <View style={styles.content}>
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Recording Instructions:</Text>
+          <Text style={styles.instructionsText}>
+            • Position camera at side angle (profile view){'\n'}
+            • Ensure full body is visible in frame{'\n'}
+            • Use good lighting with minimal shadows{'\n'}
+            • Keep camera steady throughout recording{'\n'}
+            • Perform 5-10 repetitions at normal speed{'\n'}
+            • Keep your face visible for identity verification
+          </Text>
+        </View>
+
+        <View style={styles.actionContainer}>
+          {!recordedVideoPath ? (
+            <TouchableOpacity
+              style={[styles.recordButton, isRecording && styles.recordingButton]}
+              onPress={handleRecord}
+              disabled={isRecording}>
+              <Text style={styles.recordButtonText}>
+                {isRecording ? '🔴 Recording...' : '📹 Start Recording'}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.recordedContainer}>
+              <Text style={styles.recordedText}>✅ Video Recorded</Text>
+              <Text style={styles.recordedPath}>{recordedVideoPath}</Text>
+            </View>
+          )}
+
+          {isUploading && (
+            <View style={styles.uploadContainer}>
+              <Text style={styles.uploadText}>
+                Uploading and Analyzing... {Math.round(uploadProgress)}%
+              </Text>
+              <View style={styles.progressBar}>
+                <View
+                  style={[
+                    styles.progressFill,
+                    {width: `${uploadProgress}%`},
+                  ]}
+                />
+              </View>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={syncPendingUploads}
+            disabled={isUploading}>
+            <Text style={styles.secondaryButtonText}>📤 Sync Pending</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate('Results', {})}
+            disabled={isUploading}>
+            <Text style={styles.secondaryButtonText}>📊 View Results</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            💡 Videos are saved locally and can be uploaded when connection is available
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  instructionsContainer: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 32,
+  },
+  instructionsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 12,
+  },
+  instructionsText: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 24,
+  },
+  actionContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  recordButton: {
+    backgroundColor: '#FF4444',
+    borderRadius: 50,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    minWidth: 200,
+    alignItems: 'center',
+  },
+  recordingButton: {
+    backgroundColor: '#CC0000',
+  },
+  recordButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  recordedContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#e8f5e8',
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  recordedText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#28a745',
+    marginBottom: 8,
+  },
+  recordedPath: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+  },
+  uploadContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  uploadText: {
+    fontSize: 16,
+    color: '#2196F3',
+    marginBottom: 8,
+  },
+  progressBar: {
+    width: '100%',
+    height: 8,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#2196F3',
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 32,
+  },
+  secondaryButton: {
+    backgroundColor: '#6c757d',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  secondaryButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    alignItems: 'center',
+    paddingBottom: 24,
+  },
+  footerText: {
+    color: '#666',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+});
+
+export default RecordScreen;
