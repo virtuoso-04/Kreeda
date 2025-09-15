@@ -120,7 +120,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         return {
           paddingHorizontal: theme.spacing.xxxl,
           paddingVertical: theme.spacing.xl,
-          minHeight: theme.spacing.touchTargetLarge,
+          minHeight: theme.accessibility.largeTouchTarget,
         };
       case 'medium':
       default:

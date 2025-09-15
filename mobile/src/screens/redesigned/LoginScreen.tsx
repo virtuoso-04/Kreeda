@@ -168,13 +168,19 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerContent}>
-              <Text style={styles.logoEmoji}>🏃‍♂️</Text>
+              {/* Kreeda Logo */}
+              <View style={styles.logoContainer}>
+                <Text style={styles.logoEmoji}>�</Text>
+                <Text style={styles.logoHindi}>क्रीड़ा</Text>
+              </View>
+              
               <GlassCard
                 variant="light"
                 style={styles.titleCard}
               >
                 <Text style={styles.title}>{t('login.title')}</Text>
                 <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
+                <Text style={styles.tagline}>{t('branding.tagline')}</Text>
               </GlassCard>
               
               {/* Language Selector */}
@@ -269,6 +275,14 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.footerText}>
                 {t('login.footer')}
               </Text>
+              <View style={styles.brandingFooter}>
+                <Text style={styles.brandingText}>
+                  {t('branding.poweredBy')}
+                </Text>
+                <Text style={styles.madeInIndia}>
+                  {t('branding.madeInIndia')}
+                </Text>
+              </View>
             </GlassCard>
           </View>
         </ScrollView>
@@ -308,12 +322,28 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: theme.spacing.xl,
+  },
+
   logoEmoji: {
     fontSize: 64,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.sm,
     textShadowColor: theme.colors.glass.darkAlpha50,
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+  },
+
+  logoHindi: {
+    fontSize: theme.typography.fontSize.xl,
+    fontFamily: theme.typography.fontFamily.primary,
+    fontWeight: theme.typography.fontWeight.bold,
+    color: theme.colors.kreeda.gold,
+    textAlign: 'center',
+    textShadowColor: theme.colors.glass.darkAlpha50,
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 
   titleCard: {
@@ -338,6 +368,16 @@ const styles = StyleSheet.create({
     color: theme.colors.neutral.gray[600],
     textAlign: 'center',
     lineHeight: theme.typography.lineHeight.relaxed,
+    marginBottom: theme.spacing.sm,
+  },
+
+  tagline: {
+    fontSize: theme.typography.fontSize.md,
+    fontFamily: theme.typography.fontFamily.primary,
+    fontWeight: theme.typography.fontWeight.semibold,
+    color: theme.colors.kreeda.accent,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 
   languageContainer: {
@@ -392,6 +432,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: theme.typography.lineHeight.relaxed,
     opacity: 0.8,
+    marginBottom: theme.spacing.md,
+  },
+
+  brandingFooter: {
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+
+  brandingText: {
+    fontSize: theme.typography.fontSize.sm,
+    fontFamily: theme.typography.fontFamily.primary,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.neutral.gray[600],
+    textAlign: 'center',
+  },
+
+  madeInIndia: {
+    fontSize: theme.typography.fontSize.sm,
+    fontFamily: theme.typography.fontFamily.primary,
+    fontWeight: theme.typography.fontWeight.semibold,
+    color: theme.colors.kreeda.accent,
+    textAlign: 'center',
   },
 });
 

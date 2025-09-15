@@ -4,10 +4,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {StatusBar, StyleSheet} from 'react-native';
 
 // Import screens
-import LoginScreen from './src/screens/LoginScreen';
-import TestSelectScreen from './src/screens/TestSelectScreen';
-import RecordScreen from './src/screens/RecordScreen';
-import ResultsScreen from './src/screens/ResultsScreen';
+import LoginScreen from './screens/LoginScreen';
+import TestSelectScreen from './screens/TestSelectScreen';
+import RecordScreen from './screens/RecordScreen';
+import ResultsScreen from './screens/ResultsScreen';
 
 // Define navigation types
 export type RootStackParamList = {

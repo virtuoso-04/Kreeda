@@ -1,13 +1,14 @@
 /**
- * Design System & Theme Tokens
- * Olympic-themed glassmorphism design for SIH Sports Talent Assessment MVP
+ * Kreeda Design System & Theme Tokens
+ * Olympic-themed glassmorphism design for Kreeda Sports Talent Assessment
  * 
- * Visual Guidelines:
- * - Mobile-first, Android-optimized
+ * Brand Guidelines:
+ * - Kreeda (क्रीड़ा) - Sports Excellence Brand Identity
+ * - Mobile-first, accessible design for rural India
  * - Glassmorphism with translucent panels and backdrop blur
- * - Olympic color palette (deep blue + vibrant orange)
- * - Helvetica-inspired typography with high contrast
- * - Large touch targets for rural India accessibility
+ * - Olympic-inspired colors representing sports excellence
+ * - WCAG AA accessibility compliance
+ * - Large touch targets (48dp+) for comfortable interaction
  */
 
 import { Platform } from 'react-native';
@@ -17,7 +18,17 @@ import { Platform } from 'react-native';
  * Olympic-inspired palette with glassmorphism variants
  */
 export const colors = {
-  // Primary Palette
+  // Kreeda Brand Palette
+  kreeda: {
+    primary: '#0B3D91',    // Kreeda Deep Blue (Olympic-inspired)
+    accent: '#FF6A00',     // Kreeda Orange (Energy & Excellence)
+    skyBlue: '#7FB3FF',    // Kreeda Sky (Aspiration)
+    gold: '#FFD700',       // Achievement Gold
+    darkBlue: '#062A6B',   // Darker brand variant
+    lightOrange: '#FF8A33', // Lighter accent variant
+  },
+  
+  // Primary Palette (maintaining backward compatibility)
   primary: {
     blue: '#0B3D91',      // Primary Blue (deep)
     orange: '#FF6A00',    // Accent Orange (vibrant)
@@ -212,39 +223,80 @@ export const elevation = {
 } as const;
 
 /**
- * GLASSMORPHISM PRESETS
- * Pre-configured glass styles for common components
+ * KREEDA GLASSMORPHISM PRESETS
+ * Olympic-themed glass styles for distinctive branding
  */
 export const glassPresets = {
-  // Primary glass card (light)
+  // Kreeda primary card (premium glass)
   cardLight: {
     backgroundColor: colors.glass.whiteAlpha90,
-    borderWidth: 1,
-    borderColor: colors.glass.whiteAlpha30,
+    borderWidth: 2,
+    borderColor: colors.kreeda.lightOrange,
+    borderStyle: 'solid',
     ...elevation.glass,
+    // Add Kreeda brand gradient simulation
+    backgroundImage: `linear-gradient(135deg, ${colors.glass.whiteAlpha90}, ${colors.glass.blueAlpha06})`,
   },
   
-  // Secondary glass card (blue tinted)
+  // Kreeda excellence card (blue-gold)
   cardBlue: {
-    backgroundColor: colors.glass.blueAlpha06,
-    borderWidth: 1,
-    borderColor: colors.glass.blueAlpha10,
+    backgroundColor: colors.glass.blueAlpha10,
+    borderWidth: 2,
+    borderColor: colors.kreeda.gold,
+    borderStyle: 'solid',
     ...elevation.glass,
+    // Olympic-inspired subtle glow
+    shadowColor: colors.kreeda.gold,
+    shadowOpacity: 0.1,
   },
   
-  // Overlay glass (darker)
+  // Kreeda achievement overlay (gold accent)
   overlay: {
     backgroundColor: colors.glass.darkAlpha70,
     borderWidth: 1,
-    borderColor: colors.glass.whiteAlpha10,
+    borderColor: colors.kreeda.gold,
+    borderStyle: 'solid',
+    // Victory glow effect
+    shadowColor: colors.kreeda.gold,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   
-  // Button glass
+  // Kreeda action button (sports energy)
   buttonGlass: {
-    backgroundColor: colors.glass.whiteAlpha20,
-    borderWidth: 1,
-    borderColor: colors.glass.whiteAlpha30,
+    backgroundColor: colors.glass.whiteAlpha30,
+    borderWidth: 2,
+    borderColor: colors.kreeda.accent,
+    borderStyle: 'solid',
     ...elevation.pressed,
+    // Energy glow for interactions
+    shadowColor: colors.kreeda.accent,
+    shadowOpacity: 0.15,
+  },
+  
+  // Kreeda premium card (sports excellence)
+  cardPremium: {
+    backgroundColor: colors.glass.whiteAlpha90,
+    borderWidth: 3,
+    borderColor: colors.kreeda.primary,
+    borderStyle: 'solid',
+    ...elevation.high,
+    // Excellence indicators
+    shadowColor: colors.kreeda.primary,
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+  },
+  
+  // Kreeda success card (achievement)
+  cardSuccess: {
+    backgroundColor: colors.semantic.successAlpha,
+    borderWidth: 2,
+    borderColor: colors.semantic.success,
+    borderStyle: 'solid',
+    ...elevation.medium,
+    // Success glow
+    shadowColor: colors.semantic.success,
+    shadowOpacity: 0.15,
   }
 } as const;
 
@@ -270,25 +322,46 @@ export const animation = {
 
 /**
  * ACCESSIBILITY TOKENS
- * WCAG AA compliant settings
+ * WCAG AA compliant settings for inclusive design
  */
 export const accessibility = {
-  // Minimum touch target sizes
-  minTouchTarget: 44,
-  preferredTouchTarget: 48,
+  // Touch target sizes (enhanced for rural India)
+  minTouchTarget: 44,        // WCAG minimum
+  preferredTouchTarget: 48,  // Recommended comfortable size
+  largeTouchTarget: 56,      // For primary actions
   
-  // Text contrast ratios (calculated)
+  // Text contrast ratios (calculated and verified)
   contrast: {
-    normal: 4.5,  // WCAG AA
-    large: 3.0,   // WCAG AA Large text
-    enhanced: 7.0, // WCAG AAA
+    normal: 4.5,    // WCAG AA normal text
+    large: 3.0,     // WCAG AA large text (18pt+ or 14pt+ bold)
+    enhanced: 7.0,  // WCAG AAA enhanced
   },
   
-  // Focus indicators
+  // Focus indicators for keyboard/screen reader navigation
   focusRing: {
     width: 2,
-    color: colors.primary.orange,
+    color: colors.kreeda.accent, // Kreeda orange for high visibility
     offset: 2,
+    style: 'solid',
+  },
+  
+  // Screen reader support
+  screenReader: {
+    announceDelay: 500, // ms delay for state changes
+    longPressDelay: 800, // ms for long press recognition
+  },
+  
+  // Reduced motion support
+  reducedMotion: {
+    animationDuration: 0, // Disable animations for motion sensitivity
+    transitionDuration: 0,
+  },
+  
+  // High contrast mode support
+  highContrast: {
+    backgroundContrast: '#000000',
+    foregroundContrast: '#FFFFFF',
+    borderContrast: '#FFFFFF',
   }
 } as const;
 
@@ -304,8 +377,74 @@ export const breakpoints = {
 } as const;
 
 /**
+ * KREEDA BRAND ELEMENTS
+ * Distinctive visual elements for Olympic sports branding
+ */
+export const kreedaBrand = {
+  // Brand symbols and emojis
+  symbols: {
+    logo: '🏆',
+    sports: '🏃‍♂️',
+    excellence: '⭐',
+    achievement: '🥇',
+    strength: '💪',
+    analysis: '🎯',
+    india: '🇮🇳',
+  },
+  
+  // Brand gradients (for future implementation)
+  gradients: {
+    primary: ['#0B3D91', '#7FB3FF'], // Deep blue to sky blue
+    accent: ['#FF6A00', '#FF8A33'],  // Orange energy gradient
+    success: ['#10B981', '#34D399'], // Achievement green
+    premium: ['#FFD700', '#FFA500'], // Gold to orange excellence
+  },
+  
+  // Olympic ring colors (for special occasions)
+  olympicRings: {
+    blue: '#0085C7',
+    yellow: '#F4C300', 
+    black: '#000000',
+    green: '#009F3F',
+    red: '#DF0024',
+  },
+  
+  // Sports energy patterns
+  patterns: {
+    victory: {
+      colors: ['#FFD700', '#FF6A00', '#0B3D91'],
+      message: 'Victory achieved!',
+    },
+    progress: {
+      colors: ['#7FB3FF', '#0B3D91'],
+      message: 'Keep pushing!',
+    },
+    excellence: {
+      colors: ['#FFD700', '#FFFFFF', '#0B3D91'],
+      message: 'Excellence in motion!',
+    },
+  },
+  
+  // Motivational elements
+  motivation: {
+    hindi: [
+      'जीत आपका इंतज़ार कर रही है', // Victory awaits you
+      'अपनी क्षमता को पहचानें',    // Recognize your potential  
+      'हर कदम एक जीत है',         // Every step is a victory
+      'खेल में उत्कृष्टता',         // Excellence in sports
+    ],
+    english: [
+      'Unleash Your Potential',
+      'Every Rep Counts',  
+      'Sports Excellence Awaits',
+      'Champion Within',
+    ],
+  }
+} as const;
+
+/**
  * THEME OBJECT
- * Complete theme export
+ * Complete Kreeda theme export
  */
 export const theme = {
   colors,
@@ -317,6 +456,7 @@ export const theme = {
   animation,
   accessibility,
   breakpoints,
+  kreedaBrand,
 } as const;
 
 export default theme;

@@ -23,13 +23,62 @@ const translations = {
       warning: 'Warning',
       offline: 'Offline',
       retry: 'Retry',
+      close: 'Close',
+      help: 'Help',
+      settings: 'Settings',
+    },
+
+    // Enhanced Error Messages
+    errors: {
+      networkError: 'Network connection failed. Please check your internet connection and try again.',
+      serverError: 'Server is temporarily unavailable. Please try again in a few minutes.',
+      videoUploadFailed: 'Video upload failed. The video will be saved locally and uploaded when connection is restored.',
+      invalidVideoFormat: 'Invalid video format. Please select an MP4 or MOV file.',
+      videoTooLarge: 'Video file is too large. Please select a video under 100MB.',
+      cameraPermissionDenied: 'Camera permission is required to record videos. Please enable camera access in settings.',
+      storagePermissionDenied: 'Storage permission is required to save videos. Please enable storage access in settings.',
+      analysisTimeout: 'Video analysis is taking longer than expected. Your video is saved and will be processed soon.',
+      unexpectedError: 'An unexpected error occurred. Please restart the app and try again.',
+      offlineMode: 'You are offline. Videos will be saved locally and synced when connection is restored.',
+      
+      // Error Boundary specific
+      unexpectedErrorTitle: 'Oops! Something went wrong',
+      errorIconDescription: 'Error icon indicating a problem occurred',
+      retryButtonLabel: 'Retry the last action',
+      retryButtonHint: 'Attempts to fix the error and continue',
+      restartButtonLabel: 'Restart Kreeda app',
+      restartButtonHint: 'Closes and reopens the app completely',
+      restartTitle: 'Restart Kreeda',
+      restartMessage: 'Restarting the app may fix this issue. Your saved videos will not be lost.',
+      restartApp: 'Restart App',
+      retrying: 'Retrying your request...',
+      
+      // Error titles
+      networkTitle: 'Connection Problem',
+      serverTitle: 'Server Issue',
+      permissionTitle: 'Permission Required',
+      uploadTitle: 'Upload Failed',
+      analysisTitle: 'Analysis Delayed',
+      
+      // Additional error messages
+      storageError: 'Unable to access device storage. Please check available space and permissions.',
+      permissionGuide: 'Please enable the required permissions in Settings to continue using Kreeda.',
+    },
+
+    // Branding
+    branding: {
+      appFullName: 'Kreeda Sports Talent Assessment',
+      tagline: 'Unleash Your Sports Potential',
+      poweredBy: 'Powered by AI Technology',
+      madeInIndia: 'Made in India 🇮🇳',
+      version: 'Version {version}',
     },
 
     // Login Screen
     login: {
-      title: 'Sports Integrity',
-      subtitle: 'AI-Powered Exercise Analysis',
-      appName: 'SI Analytics',
+      title: 'Kreeda',
+      subtitle: 'AI-Powered Sports Talent Assessment',
+      appName: 'Kreeda Sports',
       athleteNameLabel: 'Athlete Name',
       athleteNamePlaceholder: 'Enter your name',
       backendUrlLabel: 'Backend Server URL',
@@ -37,7 +86,7 @@ const translations = {
       helpLink: 'Need help? 📡',
       continueButton: 'Continue',
       connecting: 'Connecting...',
-      footer: 'Record exercises with AI-powered integrity verification',
+      footer: 'Discover your sports potential with Kreeda AI analysis',
       errorEmptyName: 'Please enter athlete name',
       connectionWarning: 'Connection Warning',
       connectionMessage: 'Cannot connect to backend server. You can still record videos locally and sync later.',
@@ -180,13 +229,62 @@ const translations = {
       warning: 'चेतावनी',
       offline: 'ऑफ़लाइन',
       retry: 'पुनः प्रयास',
+      close: 'बंद करें',
+      help: 'सहायता',
+      settings: 'सेटिंग्स',
+    },
+
+    // Enhanced Error Messages
+    errors: {
+      networkError: 'नेटवर्क कनेक्शन विफल। कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।',
+      serverError: 'सर्वर अस्थायी रूप से अनुपलब्ध है। कृपया कुछ मिनटों में पुनः प्रयास करें।',
+      videoUploadFailed: 'वीडियो अपलोड विफल। वीडियो स्थानीय रूप से सहेजा जाएगा और कनेक्शन बहाली पर अपलोड होगा।',
+      invalidVideoFormat: 'अमान्य वीडियो प्रारूप। कृपया MP4 या MOV फ़ाइल चुनें।',
+      videoTooLarge: 'वीडियो फ़ाइल बहुत बड़ी है। कृपया 100MB से कम का वीडियो चुनें।',
+      cameraPermissionDenied: 'वीडियो रिकॉर्ड करने के लिए कैमरा अनुमति आवश्यक है। कृपया सेटिंग्स में कैमरा एक्सेस सक्षम करें।',
+      storagePermissionDenied: 'वीडियो सहेजने के लिए स्टोरेज अनुमति आवश्यक है। कृपया सेटिंग्स में स्टोरेज एक्सेस सक्षम करें।',
+      analysisTimeout: 'वीडियो विश्लेषण अपेक्षा से अधिक समय ले रहा है। आपका वीडियो सहेजा गया है और जल्द ही प्रोसेस होगा।',
+      unexpectedError: 'एक अप्रत्याशित त्रुटि हुई है। कृपया ऐप को पुनः आरंभ करें और पुनः प्रयास करें।',
+      offlineMode: 'आप ऑफ़लाइन हैं। वीडियो स्थानीय रूप से सहेजे जाएंगे और कनेक्शन बहाली पर सिंक होंगे।',
+      
+      // Error Boundary specific
+      unexpectedErrorTitle: 'अरे! कुछ गलत हुआ है',
+      errorIconDescription: 'त्रुटि आइकन जो समस्या का संकेत देता है',
+      retryButtonLabel: 'अंतिम क्रिया को पुनः प्रयास करें',
+      retryButtonHint: 'त्रुटि को ठीक करने और जारी रखने का प्रयास करता है',
+      restartButtonLabel: 'क्रीड़ा ऐप को पुनः आरंभ करें',
+      restartButtonHint: 'ऐप को पूरी तरह से बंद करके फिर से खोलता है',
+      restartTitle: 'क्रीड़ा को पुनः आरंभ करें',
+      restartMessage: 'ऐप को पुनः आरंभ करना इस समस्या को ठीक कर सकता है। आपके सहेजे गए वीडियो खो नहीं जाएंगे।',
+      restartApp: 'ऐप पुनः आरंभ करें',
+      retrying: 'आपके अनुरोध को पुनः प्रयास कर रहे हैं...',
+      
+      // Error titles
+      networkTitle: 'कनेक्शन समस्या',
+      serverTitle: 'सर्वर समस्या',
+      permissionTitle: 'अनुमति आवश्यक',
+      uploadTitle: 'अपलोड विफल',
+      analysisTitle: 'विश्लेषण में देरी',
+      
+      // Additional error messages
+      storageError: 'डिवाइस स्टोरेज तक पहुंच नहीं। कृपया उपलब्ध स्थान और अनुमतियां जांचें।',
+      permissionGuide: 'क्रीड़ा का उपयोग जारी रखने के लिए कृपया सेटिंग्स में आवश्यक अनुमतियां सक्षम करें।',
+    },
+
+    // Branding
+    branding: {
+      appFullName: 'क्रीड़ा खेल प्रतिभा मूल्यांकन',
+      tagline: 'अपनी खेल क्षमता को उजागर करें',
+      poweredBy: 'AI तकनीक द्वारा संचालित',
+      madeInIndia: 'भारत में निर्मित 🇮🇳',
+      version: 'संस्करण {version}',
     },
 
     // Login Screen
     login: {
-      title: 'खेल सत्यनिष्ठा',
-      subtitle: 'AI-संचालित व्यायाम विश्लेषण',
-      appName: 'SI Analytics',
+      title: 'क्रीड़ा',
+      subtitle: 'AI-संचालित खेल प्रतिभा मूल्यांकन',
+      appName: 'क्रीड़ा स्पोर्ट्स',
       athleteNameLabel: 'खिलाड़ी का नाम',
       athleteNamePlaceholder: 'अपना नाम दर्ज करें',
       backendUrlLabel: 'बैकएंड सर्वर URL',
@@ -194,7 +292,7 @@ const translations = {
       helpLink: 'सहायता चाहिए? 📡',
       continueButton: 'जारी रखें',
       connecting: 'कनेक्ट हो रहा है...',
-      footer: 'AI-संचालित सत्यनिष्ठा सत्यापन के साथ व्यायाम रिकॉर्ड करें',
+      footer: 'क्रीड़ा AI विश्लेषण के साथ अपनी खेल क्षमता खोजें',
       errorEmptyName: 'कृपया खिलाड़ी का नाम दर्ज करें',
       connectionWarning: 'कनेक्शन चेतावनी',
       connectionMessage: 'बैकएंड सर्वर से कनेक्ट नहीं हो सकता। आप अभी भी वीडियो स्थानीय रूप से रिकॉर्ड कर सकते हैं और बाद में सिंक कर सकते हैं।',

@@ -7,6 +7,7 @@ import React from 'react';
 import {
   View,
   Text,
+  TouchableOpacity,
   StyleSheet,
   ViewStyle,
   TextStyle,
@@ -26,6 +27,8 @@ export interface GlassCardProps {
   accessible?: boolean;
   accessibilityLabel?: string;
   accessibilityHint?: string;
+  accessibilityRole?: 'none' | 'button' | 'text' | 'header';
+  onPress?: () => void;
 }
 
 /**
@@ -62,6 +65,8 @@ const GlassCard: React.FC<GlassCardProps> = ({
   accessible = true,
   accessibilityLabel,
   accessibilityHint,
+  accessibilityRole = 'none',
+  onPress,
 }) => {
   // Get variant styles
   const getVariantStyle = (): ViewStyle => {
@@ -100,14 +105,8 @@ const GlassCard: React.FC<GlassCardProps> = ({
   // Text color based on variant
   const textColor = variant === 'overlay' ? theme.colors.neutral.white : theme.colors.neutral.dark;
 
-  return (
-    <View
-      style={cardStyle}
-      accessible={accessible}
-      accessibilityLabel={accessibilityLabel || title}
-      accessibilityHint={accessibilityHint}
-      accessibilityRole="button" // If interactive
-    >
+  const renderContent = () => (
+    <>
       {/* Header with title and right element */}
       {(title || rightElement) && (
         <View style={styles.header}>
@@ -143,6 +142,34 @@ const GlassCard: React.FC<GlassCardProps> = ({
           {children}
         </View>
       )}
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={cardStyle}
+        onPress={onPress}
+        accessible={accessible}
+        accessibilityLabel={accessibilityLabel || title}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole={accessibilityRole}
+        activeOpacity={0.8}
+      >
+        {renderContent()}
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View
+      style={cardStyle}
+      accessible={accessible}
+      accessibilityLabel={accessibilityLabel || title}
+      accessibilityHint={accessibilityHint}
+      accessibilityRole={accessibilityRole}
+    >
+      {renderContent()}
     </View>
   );
 };
