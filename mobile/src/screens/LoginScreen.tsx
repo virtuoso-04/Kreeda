@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../App';
+import {RootStackParamList} from '../App';
 import {db} from '../services/db';
 import uploadService from '../services/upload';
 import SimpleHeader from '../components/SimpleHeader';

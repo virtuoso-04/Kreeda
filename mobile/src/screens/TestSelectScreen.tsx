@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../../App';
+import {RootStackParamList} from '../App';
 import SimpleHeader from '../components/SimpleHeader';
 
 type TestSelectScreenNavigationProp = StackNavigationProp<

@@ -12,7 +12,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import {RootStackParamList} from '../../App';
+import {RootStackParamList} from '../App';
 import {db, TestRecord} from '../services/db';
 import uploadService, {UploadProgressCallback} from '../services/upload';
 import SimpleHeader from '../components/SimpleHeader';
