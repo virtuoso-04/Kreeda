@@ -13,14 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 import uvicorn
 
-from utils import (
+from .utilss import (
     create_job_id, 
     save_video_file, 
     save_result_json, 
     load_result_json,
     get_video_info
 )
-from analyze import analyze_video
+from .analyzee import analyze_video
 
 # Initialize FastAPI app
 app = FastAPI(

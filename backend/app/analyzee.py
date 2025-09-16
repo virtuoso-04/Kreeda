@@ -8,7 +8,7 @@ import numpy as np
 import mediapipe as mp
 from typing import Dict, Any, List, Optional, Tuple
 import math
-from utils import calculate_angle, compute_frame_mse, get_centroid
+from .utilss import calculate_angle, compute_frame_mse, get_centroid
 
 # MediaPipe pose initialization
 mp_pose = mp.solutions.pose
