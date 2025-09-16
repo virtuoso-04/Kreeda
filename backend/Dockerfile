@@ -41,7 +41,7 @@ COPY mobile/package.json .
 COPY mobile/package-lock.json .
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
-    npm install
+    npm install --legacy-peer-deps
 
 # Expose port for backend
 EXPOSE 8000
