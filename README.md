@@ -3,7 +3,7 @@
 ## 🚀 Quick Start: Run the Full System
 
 ### 1. **Start the Backend**
-```bash
+``` bash
 cd backend
 pip install -r [requirements.txt](http://_vscodecontentref_/2)
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -16,8 +16,9 @@ cd mobile/web
 npm install
 npm run build
 npx serve dist
+```
 
-> **Revolutionary AI-driven sports assessment platform with Olympic-themed design, multilingual support, and accessibility-first approach for rural India**
+**Revolutionary AI-driven sports assessment platform with Olympic-themed design, multilingual support, and accessibility-first approach for rural India**
 
 A comprehensive end-to-end system featuring **AI-powered exercise analysis**, **cheat detection**, **multilingual interface (English + Hindi)**, and **professional glassmorphism UI** designed specifically for identifying and nurturing sports talent in rural India.
 
