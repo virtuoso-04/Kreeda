@@ -1,0 +1,31 @@
+{
+  "name": "kreeda-web",
+  "version": "1.0.0",
+  "description": "Web version of Kreeda Sports App",
+  "main": "index.web.js",
+  "scripts": {
+    "start": "serve .",
+    "build": "webpack --config ../webpack.config.js"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.72.17",
+    "react-native-web": "0.19.13"
+  },
+  "devDependencies": {
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "@babel/plugin-transform-numeric-separator": "^7.22.5",
+    "@babel/plugin-transform-async-generator-functions": "^7.22.5",
+    "@babel/plugin-transform-optional-catch-binding": "^7.22.5",
+    "@babel/plugin-transform-object-rest-spread": "^7.22.5",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.22.5",
+    "@babel/plugin-transform-class-properties": "^7.22.5",
+    "@babel/plugin-transform-optional-chaining": "^7.22.5",
+    "uglify-js": "^3.17.4",
+    "rimraf": "^4.0.0",
+    "@react-native/babel-preset": "^4.0.0"
+  }
+}
