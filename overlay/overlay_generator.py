@@ -12,6 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
+from math import degrees, atan2
 
 
 # MediaPipe drawing utilities
@@ -23,6 +24,19 @@ mp_drawing_styles = mp.solutions.drawing_styles
 DEFAULT_SAMPLE_RATE = 1
 DEFAULT_SCALE = 1.0
 LANDMARK_CONFIDENCE_THRESHOLD = 0.5
+
+
+def calculate_angle(a, b, c):
+    """Calculate the angle between three points."""
+    a = np.array(a)  # First point
+    b = np.array(b)  # Middle point
+    c = np.array(c)  # Last point
+
+    radians = atan2(c[1] - b[1], c[0] - b[0]) - atan2(a[1] - b[1], a[0] - b[0])
+    angle = abs(degrees(radians))
+    if angle > 180.0:
+        angle = 360 - angle
+    return angle
 
 
 def generate_overlay(
@@ -118,7 +132,35 @@ def generate_overlay(
         
         if results.pose_landmarks:
             landmark_detections += 1
-            
+
+            # Extract key landmarks
+            landmarks = results.pose_landmarks.landmark
+            shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x, 
+                        landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            elbow = [landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].x, 
+                     landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+            wrist = [landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].x, 
+                     landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
+
+            # Calculate elbow angle
+            elbow_angle = calculate_angle(shoulder, elbow, wrist)
+
+            # Validate push-up form
+            if elbow_angle < 90:
+                form_status = "Improper"
+                color = (0, 0, 255)  # Red for improper form
+            else:
+                form_status = "Proper"
+                color = (0, 255, 0)  # Green for proper form
+
+            # Draw form status on the overlay
+            cv2.putText(overlay_frame, f"Form: {form_status}", (10, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+
+            # Draw elbow angle
+            cv2.putText(overlay_frame, f"Elbow Angle: {elbow_angle:.1f}", (10, 90),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+
             # Calculate average landmark confidence
             landmark_confidences = [
                 lm.visibility for lm in results.pose_landmarks.landmark
@@ -183,7 +225,11 @@ def generate_overlay(
             "landmark_detections": landmark_detections,
             "detection_rate": detection_rate,
             "average_confidence": avg_confidence,
-            "confidence_scores": confidence_scores[-100:]  # Keep last 100 for size
+            "confidence_scores": confidence_scores[-100:],  # Keep last 100 for size
+            "form_validation": {
+                "proper_frames": sum(1 for score in confidence_scores if score >= 90),
+                "improper_frames": sum(1 for score in confidence_scores if score < 90)
+            }
         }
     }
     

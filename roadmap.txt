@@ -1,0 +1,100 @@
+# Roadmap for MVP Prototype
+
+## 🔹 Setup & Core Capture
+**Goal**: Get a mobile app that records + processes basic fitness tests.
+
+### Mobile App Skeleton
+- **Framework**: React Native
+- **UI Flow**: Login → Choose Test (Push-ups, Sit-ups, Vertical Jump) → Record → Upload/Analyze
+
+### Video Capture & Storage
+- Use mobile camera for video recording.
+- Save locally in compressed format (MP4, H.264).
+
+### Offline-first Storage
+- Store results & videos in SQLite/local storage.
+- **Edge Factor**: Small APK (<25MB), works on entry-level phones.
+
+✅ **Deliverable by EOD Day 1**:
+- A working mobile app that lets users record video of a test and stores it offline.
+
+---
+
+## 🔹 AI Core + Cheat Detection
+**Goal**: Show the AI magic (core differentiator).
+
+### Pose Estimation Integration
+- Use MediaPipe / OpenPose in Python backend or TensorFlow Lite in mobile app.
+- Detect joints → Validate push-up/sit-up posture.
+
+### Rep Counting
+- Simple rule-based counting from pose landmarks.
+
+### Cheat Detection (Lightweight)
+- Detect suspicious freeze frames / tampering using OpenCV (check sudden frame skips).
+- Validate identity using face detection consistency across frames.
+
+### Performance Benchmarking
+- Compare counts/time against sample norms (just use dummy dataset now).
+
+### Quick Backend (Optional for demo)
+- FastAPI/Flask API to receive video → run AI model → return result JSON.
+
+✅ **Deliverable by EOD Day 2**:
+- A video recording analyzed by AI: count reps, validate posture, show "valid/invalid reps".
+- Cheat detection alert if tampering is suspected.
+
+---
+
+## 🔹 Dashboard + Edge Demonstration
+**Goal**: Make it visible & compelling for judges.
+
+### Official Dashboard (Web App)
+- Simple React dashboard or Streamlit app:
+  - Upload/receive results from mobile.
+  - Show athlete profile (Name, Age, Test Results).
+  - AI overlay (video playback with skeleton overlay).
+
+### Gamification & Engagement
+- Progress bar: "You did 12 push-ups out of 20 standard."
+- Badge for completing tests.
+
+### Offline → Sync Flow
+- Record offline → Sync results to dashboard when internet comes back.
+
+### Polish for Demo
+- Add 2–3 regional language support (Hindi, Bengali) for extra edge.
+- Show one working athlete profile pipeline end-to-end:
+  - Record → AI analysis → Cheat detection → Dashboard report.
+
+✅ **Deliverable by Demo**:
+- A live demo:
+  - Record a push-up test on phone → AI counts reps & flags posture → Results synced to dashboard.
+  - Judges see dashboard with athlete profile + standardized score.
+
+---
+
+## 🎯 MVP Core Functionality (Hackathon Version)
+
+### Mobile App
+- Record short videos of fitness tests (push-ups, sit-ups, jump).
+- Offline storage → later sync.
+
+### AI/ML Core
+- Pose detection with MediaPipe.
+- Rep counting & basic form validation.
+- Lightweight cheat detection (tampering/identity consistency).
+
+### Dashboard
+- Display athlete profile & test results.
+- Video playback with pose overlay.
+- Benchmark comparison (dummy dataset for now).
+
+---
+
+## 💡 Edge Over Others (Judges’ Wow Factors)
+- **Offline-first MVP**: Usable in villages with poor connectivity.
+- **Cheat detection demo**: Integrity + fairness (others may skip this).
+- **AI Pose Overlay in Dashboard**: Judges can see AI in action.
+- **Multi-language + Gamification**: Inclusive & engaging.
+- **End-to-End Flow**: Record → Analyze → Dashboard → Benchmark.

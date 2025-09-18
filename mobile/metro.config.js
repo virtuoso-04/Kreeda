@@ -7,7 +7,9 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  * @type {import('metro-config').MetroConfig}
  */
 const config = {
-  watchFolders: [],
+  watchFolders: [
+    __dirname + '/src',
+  ],
   resolver: {
     alias: {
       '@': __dirname + '/src',
@@ -28,15 +30,7 @@ const config = {
     healthCheck: {
       enabled: true,
     },
-    // Reduce file watching to avoid EMFILE errors
     watchman: false,
-    ignore: [
-      '**/node_modules/**/*',
-      '**/.git/**/*',
-      '**/android/**/*',
-      '**/ios/**/*',
-      '**/__tests__/**/*',
-    ],
   },
 };
 
