@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 
 const App = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0' }}>
-      <Text style={{ fontSize: 20, color: '#333' }}>Welcome to Kreeda Sports App (Web)</Text>
-    </View>
+    <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
+      <iframe
+        src="http://localhost:8501"
+        title="Sports Integrity Dashboard"
+        style={{ height: '100%', width: '100%', border: 'none' }}
+      />
+    </div>
   );
 };
 

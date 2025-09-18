@@ -1,6 +1,21 @@
 # 🏆 Kreeda - AI-Powered Sports Talent Assessment Platform
 
-**SIH 2024 Winner** | **Smart India Hackathon - Sports Talent Assessment MVP**
+## 🚀 Quick Start: Run the Full System
+
+### 1. **Start the Backend**
+```bash
+cd backend
+pip install -r [requirements.txt](http://_vscodecontentref_/2)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+cd dashboard
+pip install -r [requirements.txt](http://_vscodecontentref_/3)
+streamlit run dashboard.py --server.port 8501
+
+cd mobile/web
+npm install
+npm run build
+npx serve dist
 
 > **Revolutionary AI-driven sports assessment platform with Olympic-themed design, multilingual support, and accessibility-first approach for rural India**
 
